@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "MonoAndroid,Version=v13.0": {
+      "FlexLayout.Xamarin/2.0.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Xamarin.AndroidX.AppCompat": "1.2.0.5"
+        },
+        "compile": {
+          "lib/monoandroid90/FlexLayout.dll": {}
+        },
+        "runtime": {
+          "lib/monoandroid90/FlexLayout.dll": {}
+        }
+      },
       "System.Numerics.Vectors/4.5.0": {
         "type": "package",
         "compile": {
@@ -1007,6 +1019,19 @@
     }
   },
   "libraries": {
+    "FlexLayout.Xamarin/2.0.1.1": {
+      "sha512": "gSL1k1+ORcoLSh1VjkYbn6Ek+KExWfIkG7SdaIplqO8z9BFwXLxCr2kPaKX5ZPWIUVS7SSdvxLslAQYNiQd0fw==",
+      "type": "package",
+      "path": "flexlayout.xamarin/2.0.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flexlayout.xamarin.2.0.1.1.nupkg.sha512",
+        "flexlayout.xamarin.nuspec",
+        "icon.png",
+        "lib/monoandroid90/FlexLayout.dll"
+      ]
+    },
     "System.Numerics.Vectors/4.5.0": {
       "sha512": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
       "type": "package",
@@ -1848,6 +1873,7 @@
   },
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v13.0": [
+      "FlexLayout.Xamarin >= 2.0.1.1",
       "Xamarin.AndroidX.AppCompat >= 1.2.0.5",
       "Xamarin.Essentials >= 1.6.1",
       "Xamarin.Google.Android.Material >= 1.0.0.1"
@@ -1891,6 +1917,10 @@
     "frameworks": {
       "monoandroid13.0": {
         "dependencies": {
+          "FlexLayout.Xamarin": {
+            "target": "Package",
+            "version": "[2.0.1.1, )"
+          },
           "Xamarin.AndroidX.AppCompat": {
             "target": "Package",
             "version": "[1.2.0.5, )"

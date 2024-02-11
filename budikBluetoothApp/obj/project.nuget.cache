@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "bcgPxu/0Ro0zzmgC5CNgcdi0R2DRn4zdbWiPVihaM3tH3YR1ys3F905fL+3Gi17ldt6MqsQOz49C+zlqYywRQw==",
+  "dgSpecHash": "rHcr/39XihVYuH4f0Vm+6mpdVMk+fQ21J/YC7yPcLamHwBkqINouOH/O5zTVRs6jo8jYXDvktm6j4OIpKaPgzw==",
   "success": true,
   "projectFilePath": "C:\\IT\\Programovanie_amater\\projects\\bluetoothBudik\\budikBluetoothApp\\budikBluetoothApp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\tobol\\.nuget\\packages\\flexlayout.xamarin\\2.0.1.1\\flexlayout.xamarin.2.0.1.1.nupkg.sha512",
     "C:\\Users\\tobol\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\tobol\\.nuget\\packages\\xamarin.androidx.activity\\1.1.0.3\\xamarin.androidx.activity.1.1.0.3.nupkg.sha512",
     "C:\\Users\\tobol\\.nuget\\packages\\xamarin.androidx.annotation\\1.1.0.7\\xamarin.androidx.annotation.1.1.0.7.nupkg.sha512",

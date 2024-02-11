@@ -7,23 +7,46 @@ using AndroidX.AppCompat.Widget;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Snackbar;
+using Android;
+using Android.Widget;
 
 namespace budikBluetoothApp
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        Button plusFBTN;
+        Button minusFBTN;
+        TextView frequencyTV;
+        SeekBar frequencySB;
+        double frequency;
+        double Frequency
+        {
+            get { return frequency; }
+            set {
+                if( value< 87.5 ) { value = 87.5; }
+                else if (value > 108) { value = 108; }
+                frequencyTV.Text = $"{value.ToString()}MHz";
+            }
+        }
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
+
+            AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(toolbar);
+            frequencySB = FindViewById<SeekBar>(Resource.Id.seekBar1);
+            frequencyTV = FindViewById<TextView>(Resource.Id.textView1);
+            frequencySB.ProgressChanged += frequencyBarChanged;
+            plusFBTN = FindViewById<Button>(Resource.Id.button2);
+            plusFBTN.Click += (s, e) => { frequencySB.Progress += 1; };
+            minusFBTN = FindViewById<Button>(Resource.Id.button1);
+            minusFBTN.Click += (s, e) => { frequencySB.Progress -= 1; };
+            frequencySB.Progress = 100;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -42,12 +65,10 @@ namespace budikBluetoothApp
 
             return base.OnOptionsItemSelected(item);
         }
-
-        private void FabOnClick(object sender, EventArgs eventArgs)
+        public void frequencyBarChanged(object sender, SeekBar.ProgressChangedEventArgs e) 
         {
-            View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (View.IOnClickListener)null).Show();
+             double newValue = 87.5 + (Convert.ToDouble(e.Progress)/10);
+             Frequency = newValue;
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
