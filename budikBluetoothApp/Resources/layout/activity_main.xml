@@ -19,17 +19,33 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
+    <TextView
+        android:text="27°C"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginTop="63.0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempteratureTextView"
+        android:layout_marginLeft="10.0dp" />
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="5.0dp"
+        android:layout_marginTop="63.0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <TextView
+            android:text="10:00:00"
+            android:textAlignment="viewEnd"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/clockTextView"
+            android:layout_marginRight="10dp" />
 
 
 
         <com.google.android.flexbox.FlexboxLayout
             android:orientation="horizontal"
-            android:layout_marginTop="55.0dp"
+            android:layout_marginTop="45.0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -67,6 +83,12 @@
             android:thumbTint="#202225"
             android:progressBackgroundTint="@android:color/background_dark"
             android:progressTint="@android:color/darker_gray"/>
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timePicker1" />
+
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

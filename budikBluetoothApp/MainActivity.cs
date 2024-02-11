@@ -9,6 +9,7 @@ using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Snackbar;
 using Android;
 using Android.Widget;
+using System.Timers;
 
 namespace budikBluetoothApp
 {
@@ -20,6 +21,8 @@ namespace budikBluetoothApp
         TextView frequencyTV;
         SeekBar frequencySB;
         double frequency;
+        TextView clockTextView;
+        Timer timer;
         double Frequency
         {
             get { return frequency; }
@@ -47,6 +50,13 @@ namespace budikBluetoothApp
             minusFBTN = FindViewById<Button>(Resource.Id.button1);
             minusFBTN.Click += (s, e) => { frequencySB.Progress -= 1; };
             frequencySB.Progress = 100;
+            clockTextView = FindViewById<TextView>(Resource.Id.clockTextView);
+
+            Timer_Elapsed(null,null);
+            timer = new Timer();
+            timer.Interval = 1000; 
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -77,5 +87,16 @@ namespace budikBluetoothApp
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-	}
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            clockTextView.Text = DateTime.Now.ToString("HH:mm:ss");
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            timer.Stop();
+            timer.Dispose();
+        }
+    }
 }
