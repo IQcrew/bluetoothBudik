@@ -45,7 +45,7 @@
 
         <com.google.android.flexbox.FlexboxLayout
             android:orientation="horizontal"
-            android:layout_marginTop="45.0dp"
+            android:layout_marginTop="70.0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -82,11 +82,102 @@
             android:id="@+id/seekBar1"
             android:thumbTint="#202225"
             android:progressBackgroundTint="@android:color/background_dark"
-            android:progressTint="@android:color/darker_gray"/>
-        <TimePicker
-            android:layout_width="wrap_content"
+            android:progressTint="@android:color/darker_gray"
+            android:layout_marginTop="32.5dp" />
+
+            <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="139.0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <Button
+                android:text="10:00:00"
+                android:layout_width="242.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockButton1"
+                android:layout_marginRight="0.0dp"
+                android:layout_marginLeft="23.0dp"
+                android:textAlignment="center"
+                android:backgroundTint="#ff4b4b4b" />
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockSwitch1"
+                android:layout_marginRight="9.0dp"
+                android:thumbTint="#ff555555"/>
+         </LinearLayout>
+        <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="19.0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <Button
+                android:text="10:00:00"
+                android:layout_width="242.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockButton2"
+                android:layout_marginRight="0.0dp"
+                android:layout_marginLeft="23.0dp"
+                android:textAlignment="center"
+                android:backgroundTint="#ff4b4b4b" />
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockSwitch2"
+                android:layout_marginRight="9.0dp"
+                android:thumbTint="#ff555555"/>
+         </LinearLayout>
+                <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="19.0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <Button
+                android:text="10:00:00"
+                android:layout_width="242.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockButton3"
+                android:layout_marginRight="0.0dp"
+                android:layout_marginLeft="23.0dp"
+                android:textAlignment="center"
+                android:backgroundTint="#ff4b4b4b" />
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockSwitch3"
+                android:layout_marginRight="9.0dp"
+                android:thumbTint="#ff555555"/>
+
+         </LinearLayout>
+                <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="19.0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <Button
+                android:text="10:00:00"
+                android:layout_width="242.5dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockButton4"
+                android:layout_marginRight="0.0dp"
+                android:layout_marginLeft="23.0dp"
+                android:textAlignment="center"
+                android:backgroundTint="#ff4b4b4b" />
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/clockSwitch4"
+                android:layout_marginRight="9.0dp"
+                android:thumbTint="#ff555555"/>
+         </LinearLayout>
+        <TextView
+            android:text="© Made by René Kubic 2024"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/timePicker1" />
+            android:id="@+id/textView2"
+            android:layout_marginTop="57.0dp" />
 
 
     </LinearLayout>

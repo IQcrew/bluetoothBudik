@@ -23,6 +23,7 @@ namespace budikBluetoothApp
         double frequency;
         TextView clockTextView;
         Timer timer;
+        Button _timeButton;
         double Frequency
         {
             get { return frequency; }
@@ -57,6 +58,8 @@ namespace budikBluetoothApp
             timer.Interval = 1000; 
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
+
+
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -97,6 +100,21 @@ namespace budikBluetoothApp
 
             timer.Stop();
             timer.Dispose();
+        }
+        private void ShowTimePickerDialog(object sender, System.EventArgs e)
+        {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, OnTimeSetListener, DateTime.Now.Hour, DateTime.Now.Minute, false);
+            timePickerDialog.Show();
+        }
+
+        private void OnTimeSetListener(object sender, TimePickerDialog.TimeSetEventArgs e)
+        {
+            int hour = e.HourOfDay;
+            int minute = e.Minute;
+
+            string selectedTime = $"{hour:D2}:{minute:D2}";
+
+            
         }
     }
 }
