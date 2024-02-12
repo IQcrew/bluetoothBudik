@@ -22,7 +22,15 @@ namespace Radio_Budik
         double frequency;
         TextView clockTextView;
         Timer timer;
-        Button _timeButton;
+        Button alarm1;
+        Switch alarm1state;
+        Button alarm2;
+        Switch alarm2state;
+        Button alarm3;
+        Switch alarm3state;
+        Button alarm4;
+        Switch alarm4state;
+        private Button selectedButton= null;
         double Frequency
         {
             get { return frequency; }
@@ -59,6 +67,19 @@ namespace Radio_Budik
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
+
+            alarm1 = FindViewById<Button>(Resource.Id.clockButton1);
+            alarm2 = FindViewById<Button>(Resource.Id.clockButton2);
+            alarm3 = FindViewById<Button>(Resource.Id.clockButton3);
+            alarm4 = FindViewById<Button>(Resource.Id.clockButton4);
+            alarm1state = FindViewById<Switch>(Resource.Id.clockSwitch1);
+            alarm2state = FindViewById<Switch>(Resource.Id.clockSwitch2);
+            alarm3state = FindViewById<Switch>(Resource.Id.clockSwitch3);
+            alarm4state = FindViewById<Switch>(Resource.Id.clockSwitch4);
+            alarm1.Click += ShowTimePickerDialog;
+            alarm2.Click += ShowTimePickerDialog;
+            alarm3.Click += ShowTimePickerDialog;
+            alarm4.Click += ShowTimePickerDialog;
 
         }
 
@@ -105,14 +126,20 @@ namespace Radio_Budik
         {
             TimePickerDialog timePickerDialog = new TimePickerDialog(this, OnTimeSetListener, DateTime.Now.Hour, DateTime.Now.Minute, false);
             timePickerDialog.Show();
+            selectedButton = sender as Button;
         }
 
         private void OnTimeSetListener(object sender, TimePickerDialog.TimeSetEventArgs e)
         {
+            if(selectedButton != null)
+            {
             int hour = e.HourOfDay;
             int minute = e.Minute;
 
             string selectedTime = $"{hour:D2}:{minute:D2}";
+            selectedButton.Text = selectedTime;
+            selectedButton = null;
+            }
 
 
         }
