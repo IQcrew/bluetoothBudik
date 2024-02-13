@@ -9,6 +9,10 @@ using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Snackbar;
 using Android.Widget;
 using System.Timers;
+using System.Net.Sockets;
+using System.Text;
+using System.Net.NetworkInformation;
+using System.Net;
 
 namespace Radio_Budik
 {
@@ -30,7 +34,7 @@ namespace Radio_Budik
         Switch alarm3state;
         Button alarm4;
         Switch alarm4state;
-        private Button selectedButton= null;
+        private Button selectedButton = null;
         double Frequency
         {
             get { return frequency; }
@@ -41,16 +45,23 @@ namespace Radio_Budik
                 frequencyTV.Text = $"{value.ToString()}MHz";
             }
         }
+
+        UdpClient udpClient;
+        const int udpPort = 50302;
+        string epsIpAdress = null;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
-
-
             AndroidX.AppCompat.Widget.Toolbar toolbar = FindViewById<AndroidX.AppCompat.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
+
+            udpClient = new UdpClient(udpPort);
+
+
             frequencySB = FindViewById<SeekBar>(Resource.Id.seekBar1);
             frequencyTV = FindViewById<TextView>(Resource.Id.textView1);
             frequencySB.ProgressChanged += frequencyBarChanged;
@@ -79,49 +90,32 @@ namespace Radio_Budik
             alarm1.Click += ShowTimePickerDialog;
             alarm2.Click += ShowTimePickerDialog;
             alarm3.Click += ShowTimePickerDialog;
-            alarm4.Click += ShowTimePickerDialog;
+            alarm4.Click += test;
+
 
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
-            {
-                return true;
-            }
-
-            return base.OnOptionsItemSelected(item);
-        }
         public void frequencyBarChanged(object sender, SeekBar.ProgressChangedEventArgs e)
         {
             double newValue = 87.5 + (Convert.ToDouble(e.Progress) / 10);
             Frequency = newValue;
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             clockTextView.Text = DateTime.Now.ToString("HH:mm:ss");
         }
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
 
             timer.Stop();
             timer.Dispose();
+
+            udpClient.Close();
         }
+
         private void ShowTimePickerDialog(object sender, System.EventArgs e)
         {
             TimePickerDialog timePickerDialog = new TimePickerDialog(this, OnTimeSetListener, DateTime.Now.Hour, DateTime.Now.Minute, false);
@@ -131,17 +125,34 @@ namespace Radio_Budik
 
         private void OnTimeSetListener(object sender, TimePickerDialog.TimeSetEventArgs e)
         {
-            if(selectedButton != null)
+            if (selectedButton != null)
             {
-            int hour = e.HourOfDay;
-            int minute = e.Minute;
+                int hour = e.HourOfDay;
+                int minute = e.Minute;
 
-            string selectedTime = $"{hour:D2}:{minute:D2}";
-            selectedButton.Text = selectedTime;
-            selectedButton = null;
+                string selectedTime = $"{hour:D2}:{minute:D2}";
+                selectedButton.Text = selectedTime;
+                selectedButton = null;
             }
+        }
+        private void test(object sender, System.EventArgs e)
+        {
+            SendMessage("wow");
+        }
+      
+        private void SendMessage(string message)
+        {
+            try
+            {
+                byte[] data = Encoding.ASCII.GetBytes(message);
 
 
+                udpClient.Send(data, data.Length, "192.168.0.176", udpPort);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending message: {ex.Message}");
+            }
         }
     }
 }
