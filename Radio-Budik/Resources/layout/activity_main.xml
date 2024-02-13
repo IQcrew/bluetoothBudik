@@ -5,6 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:src="@drawable/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:id="@+id/imageView1" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -53,7 +59,7 @@
                 android:text="-"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:backgroundTint="#202225"
+                app:backgroundTint="#737373"
                 android:id="@+id/button1" />
 
             <TextView
@@ -70,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/button2"
-                app:backgroundTint="#202225" />
+                app:backgroundTint="#737373" />
 
         </com.google.android.flexbox.FlexboxLayout>
         <SeekBar
@@ -87,7 +93,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_marginTop="150.0dp"
+            android:layout_marginTop="148.0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button

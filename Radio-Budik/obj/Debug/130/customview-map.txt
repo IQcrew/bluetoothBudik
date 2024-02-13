@@ -21,6 +21,7 @@ external-path;C:\IT\Programovanie_amater\projects\bluetoothBudik\Radio-Budik\obj
 flag;C:\IT\Programovanie_amater\projects\bluetoothBudik\Radio-Budik\obj\Debug\130\lp\75\jl\res\values\values.xml
 foreground;obj\Debug\130\res\mipmap-anydpi-v26\ic_launcher.xml
 foreground;obj\Debug\130\res\mipmap-anydpi-v26\ic_launcher_round.xml
+ImageView;obj\Debug\130\res\layout\activity_main.xml
 include;obj\Debug\130\res\layout\activity_main.xml
 item;obj\Debug\130\res\menu\menu_main.xml
 item;obj\Debug\130\res\values\styles.xml
