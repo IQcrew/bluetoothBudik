@@ -13,6 +13,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Net.NetworkInformation;
 using System.Net;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 
 namespace Radio_Budik
 {
@@ -34,6 +36,8 @@ namespace Radio_Budik
         Switch alarm3state;
         Button alarm4;
         Switch alarm4state;
+        Switch RadioState;
+        TextView temperature;
         private Button selectedButton = null;
         double Frequency
         {
@@ -49,6 +53,14 @@ namespace Radio_Budik
         UdpClient udpClient;
         const int udpPort = 50302;
         string epsIpAdress = null;
+
+        static IFirebaseClient client;
+        static IFirebaseConfig database = new FirebaseConfig()
+        {
+            AuthSecret = "d0zu2BWaTsJsPMw9XQVSq8qbYQIAV0C5bMmiqYHc",
+            BasePath = "https://radio-budik-default-rtdb.europe-west1.firebasedatabase.app"
+
+        };
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -71,6 +83,7 @@ namespace Radio_Budik
             minusFBTN.Click += (s, e) => { frequencySB.Progress -= 1; };
             frequencySB.Progress = 100;
             clockTextView = FindViewById<TextView>(Resource.Id.clockTextView);
+            temperature = FindViewById<TextView>(Resource.Id.tempteratureTextView);
 
             Timer_Elapsed(null, null);
             timer = new Timer();
@@ -78,7 +91,7 @@ namespace Radio_Budik
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
-
+            RadioState = FindViewById<Switch>(Resource.Id.radioSwitch);
             alarm1 = FindViewById<Button>(Resource.Id.clockButton1);
             alarm2 = FindViewById<Button>(Resource.Id.clockButton2);
             alarm3 = FindViewById<Button>(Resource.Id.clockButton3);
@@ -90,7 +103,30 @@ namespace Radio_Budik
             alarm1.Click += ShowTimePickerDialog;
             alarm2.Click += ShowTimePickerDialog;
             alarm3.Click += ShowTimePickerDialog;
-            alarm4.Click += test;
+            alarm4.Click += ShowTimePickerDialog;
+
+            try
+            {
+                client = new FireSharp.FirebaseClient(database);
+                epsIpAdress = client.Get("alarmIpArdress").Body.ToString().Replace("\"", "");
+                RadioState.Checked = client.Get("radio").Body.ToString() == "true";
+                var resStates = client.Get("alarmsState").Body.ToString().Replace("\"", "").Split(',');
+                alarm1state.Checked = resStates[0] == "1";
+                alarm2state.Checked = resStates[1] == "1";
+                alarm3state.Checked = resStates[2] == "1";
+                alarm4state.Checked = resStates[3] == "1";
+                var resTimes = client.Get("alarmsTime").Body.ToString().Replace("\"", "").Split(',');
+                alarm1.Text = minutesToString(int.Parse(resTimes[0]));
+                alarm2.Text = minutesToString(int.Parse(resTimes[1]));
+                alarm3.Text = minutesToString(int.Parse(resTimes[2]));
+                alarm4.Text = minutesToString(int.Parse(resTimes[3]));
+                temperature.Text = client.Get("temperature").Body.ToString().Replace("\"", "")+ "°C";
+                string resFrequency = client.Get("frequency").Body.ToString().Replace("\"", "").Replace(".", ",");
+                Frequency = double.Parse(resFrequency);
+
+            }
+            catch { }
+
 
 
         }
@@ -135,19 +171,21 @@ namespace Radio_Budik
                 selectedButton = null;
             }
         }
-        private void test(object sender, System.EventArgs e)
+        private string minutesToString(int minutes)
         {
-            SendMessage("wow");
+            return $"{Math.Floor(minutes/60f).ToString("00")}:{(minutes%60).ToString("00")}";
         }
       
         private void SendMessage(string message)
         {
+            if (epsIpAdress == null)
+                return;
             try
             {
                 byte[] data = Encoding.ASCII.GetBytes(message);
 
 
-                udpClient.Send(data, data.Length, "192.168.0.176", udpPort);
+                udpClient.Send(data, data.Length, epsIpAdress, udpPort);
             }
             catch (Exception ex)
             {

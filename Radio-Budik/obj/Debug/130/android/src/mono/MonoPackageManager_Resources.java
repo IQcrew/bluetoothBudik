@@ -3,7 +3,13 @@ public class MonoPackageManager_Resources {
 	public static String[] Assemblies = new String[]{
 		/* We need to ensure that "Radio-Budik.dll" comes first in this list. */
 		"Radio-Budik.dll",
+		"FireSharp.dll",
 		"FlexLayout.dll",
+		"Microsoft.Threading.Tasks.dll",
+		"Microsoft.Threading.Tasks.Extensions.dll",
+		"Newtonsoft.Json.dll",
+		"System.Net.Http.Extensions.dll",
+		"System.Net.Http.Primitives.dll",
 		"Xamarin.AndroidX.Activity.dll",
 		"Xamarin.AndroidX.Annotation.dll",
 		"Xamarin.AndroidX.AppCompat.AppCompatResources.dll",

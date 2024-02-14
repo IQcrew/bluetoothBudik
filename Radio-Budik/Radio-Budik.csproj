@@ -102,6 +102,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <PackageReference Include="FireSharp">
+      <Version>2.0.4</Version>
+    </PackageReference>
     <PackageReference Include="FlexLayout.Xamarin">
       <Version>2.0.1.1</Version>
     </PackageReference>
