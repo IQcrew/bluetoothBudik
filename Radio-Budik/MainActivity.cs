@@ -15,6 +15,7 @@ using System.Net.NetworkInformation;
 using System.Net;
 using FireSharp.Config;
 using FireSharp.Interfaces;
+using System.Threading;
 
 namespace Radio_Budik
 {
@@ -27,7 +28,7 @@ namespace Radio_Budik
         SeekBar frequencySB;
         double frequency;
         TextView clockTextView;
-        Timer timer;
+        System.Timers.Timer timer;
         Button alarm1;
         Switch alarm1state;
         Button alarm2;
@@ -46,6 +47,7 @@ namespace Radio_Budik
             {
                 if (value < 87.5) { value = 87.5; }
                 else if (value > 108) { value = 108; }
+                frequency = value;
                 frequencyTV.Text = $"{value.ToString()}MHz";
             }
         }
@@ -86,7 +88,7 @@ namespace Radio_Budik
             temperature = FindViewById<TextView>(Resource.Id.tempteratureTextView);
 
             Timer_Elapsed(null, null);
-            timer = new Timer();
+            timer = new System.Timers.Timer();
             timer.Interval = 1000;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
@@ -109,7 +111,7 @@ namespace Radio_Budik
             {
                 client = new FireSharp.FirebaseClient(database);
                 epsIpAdress = client.Get("alarmIpArdress").Body.ToString().Replace("\"", "");
-                RadioState.Checked = client.Get("radio").Body.ToString() == "true";
+                RadioState.Checked = client.Get("radio").Body.ToString().Replace("\"", "") == "true";
                 var resStates = client.Get("alarmsState").Body.ToString().Replace("\"", "").Split(',');
                 alarm1state.Checked = resStates[0] == "1";
                 alarm2state.Checked = resStates[1] == "1";
@@ -123,7 +125,13 @@ namespace Radio_Budik
                 temperature.Text = client.Get("temperature").Body.ToString().Replace("\"", "")+ "°C";
                 string resFrequency = client.Get("frequency").Body.ToString().Replace("\"", "").Replace(".", ",");
                 Frequency = double.Parse(resFrequency);
+                Thread temperatureThread = new Thread(new ThreadStart(updateTemperature));
+                Thread databaseUpdateThread = new Thread(new ThreadStart(updateDatabase));
+                Thread updateEspThread = new Thread(new ThreadStart(updateToEsp));
 
+                temperatureThread.Start();
+                databaseUpdateThread.Start();
+                //updateEspThread.Start();
             }
             catch { }
 
@@ -135,6 +143,44 @@ namespace Radio_Budik
         {
             double newValue = 87.5 + (Convert.ToDouble(e.Progress) / 10);
             Frequency = newValue;
+        }
+        void updateTemperature()
+        {
+            while(true)
+            {
+                Thread.Sleep(60000);
+
+                temperature.Text = client.Get("temperature").Body.ToString().Replace("\"", "") + "°C";
+            }
+        }
+        string tf(bool state)
+        {
+            return state ? "1" : "0";
+        }
+        int strToMinutes(string timeInput)
+        {
+            string[] temp = timeInput.Split(':');
+            return (int.Parse(temp[0])*60)+ int.Parse(temp[1]);
+        }
+        void updateDatabase()
+        {
+            while(true)
+            {
+                Thread.Sleep(1000);
+                client.Set("radio", RadioState.Checked);
+                client.Set("alarmsState", $"{tf(alarm1state.Checked)},{tf(alarm2state.Checked)},{tf(alarm3state.Checked)},{tf(alarm4state.Checked)}");
+                client.Set("alarmsTime", $"{strToMinutes(alarm1.Text)},{strToMinutes(alarm2.Text)},{strToMinutes(alarm3.Text)},{strToMinutes(alarm4.Text)}");
+                client.Set("frequency", Frequency);
+                
+            }
+        }
+
+        void updateToEsp()
+        {
+            while(true)
+            {
+
+            }
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
