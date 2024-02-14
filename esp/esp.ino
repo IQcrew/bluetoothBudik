@@ -14,9 +14,13 @@ float frequency = 100;
 bool radioOn = true;
 unsigned long previousMillis = 0;
 const unsigned long interval = 60000; // Interval of one minute in milliseconds
+bool lastRadio = false;
+float lastFrequency = 0;
 
 //lcd
 LiquidCrystal_I2C lcd(0x27, 16, 4);
+unsigned long previousLcd = -10000;
+int counter = 0;
 
 //communication
 const char *ssid = "IT-IQ-CREW24";
@@ -40,9 +44,9 @@ int alarmsState[4] = {0, 0, 0, 0};
 int alarmsTime[4] = {0, 0, 0, 0};   
 unsigned long previousRinging = -100000;  
 unsigned long previousRing = -100000;  
-int buzzerState = LOW;
-#define alarmDisablePin 17
-#define buzzerPin 19
+bool buzzerState = 1;
+#define alarmDisablePin 25
+#define buzzerPin 32
 
 
 
@@ -76,36 +80,49 @@ void setup() {
   radioOn = Firebase.getBool("radio");
   lcd.init(); 
   lcd.backlight();
-  pinMode(buzzerPin, OUTPUT);
+    if(radioOn){
+    radio.turnTheSoundBackOn();
+  }
+  else{
+    radio.mute();
+  }
+  delay(10);
   pinMode(alarmDisablePin, INPUT_PULLUP);
+  pinMode(buzzerPin, OUTPUT);
 }
 
 void loop() {
-  communication();
+  //communication();
   unsigned long currentMillis = millis();
   if(digitalRead(alarmDisablePin) == LOW){
     alarmRinging = false;
     buzzerState = LOW;
-    digitalWrite(buzzerPin, buzzerState);
+    digitalWrite(buzzerPin, LOW);
   }
   if(currentMillis- previousRinging > 60000){
     alarmRinging = false;
-    buzzerState = LOW;
-    digitalWrite(buzzerPin, buzzerState);
+    digitalWrite(buzzerPin, LOW);
     alarmClocks();
   }
   else{
     if(alarmRinging){
       if(currentMillis-previousRing>250){
         previousRing = currentMillis;
-        if(buzzerState == LOW){buzzerState = HIGH;}
-        else{buzzerState = LOW;}
-        digitalWrite(buzzerPin, buzzerState);
+        if(buzzerState){
+          digitalWrite(buzzerPin, HIGH);
+
+        }
+        else{digitalWrite(buzzerPin,LOW);}
+        buzzerState = !buzzerState;
+        
       }
     }
   }
-  radioUpdate();
-  lcdPrint();
+  if(currentMillis - previousLcd>1000){
+    previousLcd = currentMillis;
+    lcdPrint();
+  }
+    radioUpdate();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis; 
   Firebase.setInt("temperature", rtc.getTemperature());
@@ -134,8 +151,7 @@ void alarmClocks(){
 }
 
 void lcdPrint() {
-  lcd.clear();
-
+  if(counter <= 0){lcd.clear();}
   lcd.setCursor(0, 0);
   lcd.print("Time: ");
   lcd.print(rtc.getHour(alarmH12Flag, alarmPmFlag));
@@ -143,12 +159,12 @@ void lcdPrint() {
   lcd.print(rtc.getMinute());
   lcd.print(":");
   lcd.print(rtc.getSecond());
-
+  lcd.print("     ");
   lcd.setCursor(0, 1);
   lcd.print("Frequency: ");
-  lcd.print(radio.readFrequencyInMHz());
+  lcd.print(frequency);
   lcd.print(" MHz");
-
+  if(counter <= 0){
   lcd.setCursor(0, 2);
   lcd.print("Signal Level: ");
   lcd.print(radio.getSignalLevel() * 100 / 15);
@@ -158,18 +174,26 @@ void lcdPrint() {
   lcd.setCursor(0, 3);
   lcd.print("T: ");
   lcd.print(rtc.getTemperature());
-
+  }
+  counter++;
+  if(counter>=10){
+    counter = 0;
+  }
 }
 
 void radioUpdate(){
+  if(radioOn != lastRadio){
+    lastRadio = radioOn;
   if(radioOn){
     radio.turnTheSoundBackOn();
   }
   else{
     radio.mute();
   }
-  if (frequency > 87.0 && frequency < 108.0) {
+  }
+  if (frequency != lastFrequency && frequency > 87.0 && frequency < 108.0 ) {
     radio.selectFrequency(frequency);
+    lastFrequency = frequency;
   }
 }
 
