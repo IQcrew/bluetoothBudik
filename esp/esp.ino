@@ -13,9 +13,11 @@ TEA5767N radio = TEA5767N();
 float frequency = 100;
 bool radioOn = true;
 unsigned long previousMillis = 0;
-const unsigned long interval = 60000; // Interval of one minute in milliseconds
+const unsigned long interval = 60000;
 bool lastRadio = false;
 float lastFrequency = 0;
+#define speakerPin 36
+
 
 //lcd
 LiquidCrystal_I2C lcd(0x27, 16, 4);
@@ -49,8 +51,6 @@ bool buzzerState = 1;
 #define buzzerPin 32
 
 
-
-
 void setup() {
   Serial.begin(115200); 
   WiFi.begin(ssid, pwd);
@@ -64,6 +64,11 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+  delay(10);
+  pinMode(alarmDisablePin, INPUT_PULLUP);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(speakerPin,OUTPUT);
+  delay(10);
   udp.begin(udpPort);
   Wire.begin(); 
   radio.setStereoNoiseCancellingOn();
@@ -82,17 +87,15 @@ void setup() {
   lcd.backlight();
     if(radioOn){
     radio.turnTheSoundBackOn();
+    digitalWrite(speakerPin, HIGH);
   }
   else{
     radio.mute();
+    digitalWrite(speakerPin, LOW);
   }
-  delay(10);
-  pinMode(alarmDisablePin, INPUT_PULLUP);
-  pinMode(buzzerPin, OUTPUT);
 }
-
 void loop() {
-  //communication();
+  communication();
   unsigned long currentMillis = millis();
   if(digitalRead(alarmDisablePin) == LOW){
     alarmRinging = false;
@@ -135,7 +138,9 @@ void communication(){
     int len = udp.read(buffer, 200);
     if (len > 0) {
       String receivedData = (char*)buffer;
-
+      int temp = 0;
+      sscanf(receivedData.c_str(),"%d,%f,%d,%d,%d,%d,%d,%d,%d,%d",&temp, &frequency, &alarmsState[0],&alarmsState[1],&alarmsState[2],&alarmsState[3],&alarmsTime[0], &alarmsTime[1], &alarmsTime[2], &alarmsTime[3]);
+      radioOn = temp==1;
     }
   }
 }
@@ -186,9 +191,11 @@ void radioUpdate(){
     lastRadio = radioOn;
   if(radioOn){
     radio.turnTheSoundBackOn();
+    digitalWrite(speakerPin, HIGH);
   }
   else{
     radio.mute();
+    digitalWrite(speakerPin, LOW);
   }
   }
   if (frequency != lastFrequency && frequency > 87.0 && frequency < 108.0 ) {

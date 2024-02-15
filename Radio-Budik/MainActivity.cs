@@ -125,13 +125,14 @@ namespace Radio_Budik
                 temperature.Text = client.Get("temperature").Body.ToString().Replace("\"", "")+ "°C";
                 string resFrequency = client.Get("frequency").Body.ToString().Replace("\"", "").Replace(".", ",");
                 Frequency = double.Parse(resFrequency);
+                frequencySB.Progress = Convert.ToInt32((Frequency - 87.5)*10);
                 Thread temperatureThread = new Thread(new ThreadStart(updateTemperature));
                 Thread databaseUpdateThread = new Thread(new ThreadStart(updateDatabase));
                 Thread updateEspThread = new Thread(new ThreadStart(updateToEsp));
 
                 temperatureThread.Start();
                 databaseUpdateThread.Start();
-                //updateEspThread.Start();
+                updateEspThread.Start();
             }
             catch { }
 
@@ -179,7 +180,10 @@ namespace Radio_Budik
         {
             while(true)
             {
-
+                string message = $"{tf(RadioState.Checked)},{Frequency.ToString().Replace(",",".")},{tf(alarm1state.Checked)},{tf(alarm2state.Checked)},{tf(alarm3state.Checked)},{tf(alarm4state.Checked)}," +
+                    $"{strToMinutes(alarm1.Text)},{strToMinutes(alarm2.Text)},{strToMinutes(alarm3.Text)},{strToMinutes(alarm4.Text)},";
+                SendMessage(message);
+                Thread.Sleep(200);
             }
         }
 
