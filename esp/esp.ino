@@ -25,8 +25,8 @@ unsigned long previousLcd = -10000;
 int counter = 0;
 
 //communication
-const char *ssid = "IT-IQ-CREW24";
-const char *pwd = "hackedBYdudesek"; 
+const char *ssid = "renekubic";
+const char *pwd = "spsitsoc2024"; 
 const int udpPort = 50302;
 WiFiUDP udp;
 
@@ -50,7 +50,7 @@ bool buzzerState = 1;
 #define alarmDisablePin 25
 #define buzzerPin 32
 
-
+ 
 void setup() {
   Serial.begin(115200); 
   WiFi.begin(ssid, pwd);
@@ -69,7 +69,6 @@ void setup() {
   pinMode(buzzerPin, OUTPUT);
   pinMode(speakerPin,OUTPUT);
   delay(10);
-  udp.begin(udpPort);
   Wire.begin(); 
   radio.setStereoNoiseCancellingOn();
   syncTimeFromNTP();
@@ -93,6 +92,7 @@ void setup() {
     radio.mute();
     digitalWrite(speakerPin, LOW);
   }
+  udp.begin(udpPort);
 }
 void loop() {
   communication();
@@ -105,7 +105,10 @@ void loop() {
   if(currentMillis- previousRinging > 60000){
     alarmRinging = false;
     digitalWrite(buzzerPin, LOW);
-    alarmClocks();
+    if(currentMillis - previousLcd>1000){
+      alarmClocks();
+    }
+    
   }
   else{
     if(alarmRinging){

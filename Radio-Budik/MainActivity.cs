@@ -181,7 +181,7 @@ namespace Radio_Budik
             while(true)
             {
                 string message = $"{tf(RadioState.Checked)},{Frequency.ToString().Replace(",",".")},{tf(alarm1state.Checked)},{tf(alarm2state.Checked)},{tf(alarm3state.Checked)},{tf(alarm4state.Checked)}," +
-                    $"{strToMinutes(alarm1.Text)},{strToMinutes(alarm2.Text)},{strToMinutes(alarm3.Text)},{strToMinutes(alarm4.Text)},";
+                    $"{strToMinutes(alarm1.Text)},{strToMinutes(alarm2.Text)},{strToMinutes(alarm3.Text)},{strToMinutes(alarm4.Text)}";
                 SendMessage(message);
                 Thread.Sleep(200);
             }
